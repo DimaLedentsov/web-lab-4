@@ -1,0 +1,14 @@
+plugins {
+    id 'war'
+    id 'java'
+}
+
+group 'ru.senina.itmo'
+version '1.0'
+
+allprojects {
+    repositories {
+        mavenCentral()
+    }
+}
+

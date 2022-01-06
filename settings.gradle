@@ -1,0 +1,4 @@
+rootProject.name = 'web-lab-4'
+include(':frontend')
+include(':backend')
+
