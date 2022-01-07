@@ -20,12 +20,15 @@ repositories {
 }
 
 dependencies {
-    implementation 'org.springframework.boot:spring-boot-starter-data-rest'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+//    implementation 'org.springframework.boot:spring-boot-starter-data-rest'
     implementation 'org.springframework.boot:spring-boot-starter-web'
-    implementation 'org.springframework.session:spring-session-core'
+//    implementation 'org.springframework.session:spring-session-core'
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+//    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    implementation 'com.oracle.ojdbc:orai18n:19.3.0.0'
+    implementation 'com.oracle.ojdbc:ojdbc8:19.3.0.0'
 }
 
 test {
@@ -36,6 +39,13 @@ task copyWebApp(type: Copy){
     from "$rootDir/frontend/build"
     into "$rootDir/backend/build/resourses/main/static/."
 }
+
+//bootJar {
+//    manifest {
+//        attributes 'Start-Class': 'ru.senina.itmo.weblab4.BackendApplication'
+//    }
+//}
+
 
 bootJar.dependsOn(copyWebApp)
 compileJava.dependsOn ":frontend:build"
