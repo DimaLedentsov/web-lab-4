@@ -21,10 +21,19 @@ repositories {
 
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-    //implementation 'org.springframework.boot:spring-boot-devtools' // scope>runtime</scope> <optional>true</optional>
+    implementation 'org.springframework.boot:spring-boot-devtools' // scope>runtime</scope> <optional>true</optional>
     compileOnly 'org.projectlombok:lombok'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     annotationProcessor 'org.projectlombok:lombok'
+
+    //Security
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation 'io.jsonwebtoken:jjwt:0.9.1'
+    implementation 'jakarta.xml.bind:jakarta.xml.bind-api:3.0.1'
+
+    //to processes properties better
+    annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
+
 //    implementation 'org.springframework.boot:spring-boot-starter-data-rest'
 //    implementation 'org.springframework.session:spring-session-core'
 

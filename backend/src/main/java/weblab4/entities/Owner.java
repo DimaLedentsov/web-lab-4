@@ -14,10 +14,13 @@ import java.util.List;
 @Getter
 @Setter
 public class Owner {
-    //todo: add tokens and authorization name
     @Id
-    @Column(name = "userSessionId", nullable = false)
-    private String sessionId;
+    @Column(name = "login", nullable = false)
+    private String login;
+
+    @Column(name = "password", nullable = false)
+    private String password;
+
     @JsonIgnore
     //if we want to drop all attempts after owner death
     @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -32,7 +35,8 @@ public class Owner {
     @Override
     public String toString() {
         return "Owner{" +
-                "sessionId=" + sessionId +
+                "login=" + login +
+                ", password=" + password +
                 ", attemptsIds=" + attemptList.stream().map(attempt -> attempt.getId().toString() + ", ") +
                 '}';
     }

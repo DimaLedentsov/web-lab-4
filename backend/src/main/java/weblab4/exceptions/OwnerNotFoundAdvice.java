@@ -5,15 +5,13 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
-import weblab4.exceptions.AttemptNotFoundException;
 
 @ControllerAdvice
-class AttemptNotFoundAdvice {
-
+class OwnerNotFoundAdvice {
     @ResponseBody
-    @ExceptionHandler(AttemptNotFoundException.class)
+    @ExceptionHandler(OwnerNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    String attemptNotFoundHandler(AttemptNotFoundException ex) {
+    String attemptNotFoundHandler(OwnerNotFoundException ex) {
         return ex.getMessage();
     }
 }
