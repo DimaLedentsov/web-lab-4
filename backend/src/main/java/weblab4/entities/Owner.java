@@ -14,6 +14,7 @@ import java.util.List;
 @Getter
 @Setter
 public class Owner {
+    //todo: add tokens and authorization name
     @Id
     @Column(name = "userSessionId", nullable = false)
     private String sessionId;

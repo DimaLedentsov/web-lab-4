@@ -16,16 +16,18 @@ import java.util.Objects;
 @NoArgsConstructor
 @Getter
 @Setter
-public class Attempt{
+public class Attempt {
 
     @OneToOne(mappedBy = "attempt", cascade = CascadeType.ALL)
     @JoinColumn(name = "coordinates", nullable = false)
     private Coordinates coordinates = new Coordinates(0.0, 0.0, 1.0); //fixme set r = 0.0
+
     private boolean doFitArea = true;
 
-    @Id @PrimaryKeyJoinColumn
+    @Id
+    @PrimaryKeyJoinColumn
     @JsonIgnore
-    @GeneratedValue(strategy=GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id = null;
 
     @JsonIgnore
@@ -62,5 +64,10 @@ public class Attempt{
     public void setCoordinates(Coordinates coordinates) {
         log.info("Timestamp(setCoordinates) " + System.currentTimeMillis() + " " + coordinates.toString());
         this.coordinates = coordinates;
+    }
+
+
+    public boolean getDoFitArea() {
+        return doFitArea;
     }
 }
