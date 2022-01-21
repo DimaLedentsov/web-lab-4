@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import weblab4.entities.Attempt;
 import weblab4.entities.Coordinates;
 import weblab4.entities.Owner;
+import weblab4.entitiesDTO.OwnerDTO;
 import weblab4.exceptions.OwnerNotFoundException;
 import weblab4.repository.OwnersRepository;
 
@@ -30,8 +31,8 @@ public class OwnerService implements UserDetailsService {
         return repository.findAll();
     }
 
-    public Owner addOwner(Owner newAttempt) {
-        return repository.save(newAttempt);
+    public Owner addOwner(Owner newOwner) {
+        return repository.save(newOwner);
     }
 
     public Owner getOwner(String ownerLogin) {
@@ -65,12 +66,14 @@ public class OwnerService implements UserDetailsService {
         return new User(owner.getLogin(), owner.getPassword(), true, true, true, true, new HashSet<>());
     }
 
+    public Owner getOwnerFromDTO(OwnerDTO ownerDTO){
+        return new Owner(ownerDTO.getLogin(), ownerDTO.getPassword());
+    }
+
     private void addTestAttemptToBD() { //todo: remove test
         Coordinates testCoordinates = new Coordinates(7, 7, 7);
         Attempt testAttempt = new Attempt(testCoordinates, true);
-        Owner testOwner = Owner.initOwner();
-        testOwner.setLogin("marsen");
-        testOwner.setPassword("liv");
+        Owner testOwner = new Owner("liv", "marsen");
         testOwner.getAttemptList().add(testAttempt);
         testAttempt.setOwner(testOwner);
         testCoordinates.setAttempt(testAttempt);

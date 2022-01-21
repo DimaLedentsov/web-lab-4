@@ -44,7 +44,7 @@ public class Attempt {
     public static Attempt initAttempt() {
         Attempt attempt = new Attempt();
         attempt.setCoordinates(new Coordinates());
-        attempt.setOwner(Owner.initOwner());
+        attempt.setOwner(new Owner());
         return attempt;
     }
 

@@ -2,7 +2,8 @@ package weblab4.rest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import weblab4.entities.Attempt;
+import weblab4.entitiesDTO.AttemptDTO;
+import weblab4.entitiesDTO.CoordinatesDTO;
 import weblab4.services.AttemptsService;
 
 import java.util.List;
@@ -19,13 +20,13 @@ public class AttemptsController {
     }
 
     @GetMapping("/attempts")
-    List<Attempt> getAllAttempts() {
+    List<AttemptDTO> getAllAttempts() {
         return service.getAllAttempts(getCurrentOwnerLogin());
     }
 
     @PostMapping("/attempts")
-     Attempt addAttempt(@RequestBody Attempt newAttempt) {
-        return service.addAttempt(getCurrentOwnerLogin(), newAttempt);
+     void addAttempt(@RequestBody CoordinatesDTO newAttempt) {
+        service.addAttempt(getCurrentOwnerLogin(), newAttempt);
     }
 
     @DeleteMapping("/attempts")
