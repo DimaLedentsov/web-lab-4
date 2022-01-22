@@ -1,30 +1,35 @@
 package weblab4.services;
 
+import lombok.extern.java.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import weblab4.entities.Attempt;
-import weblab4.entities.Coordinates;
 import weblab4.entities.Owner;
 import weblab4.entitiesDTO.OwnerDTO;
 import weblab4.exceptions.OwnerNotFoundException;
 import weblab4.repository.OwnersRepository;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 
+@Log
 @Service
 public class OwnerService implements UserDetailsService {
     private final OwnersRepository repository;
+    private final BCryptPasswordEncoder passwordEncoder; //FIXME this field needed only for tests
 
     @Autowired
-    public OwnerService(OwnersRepository repository) {
+    public OwnerService(OwnersRepository repository, BCryptPasswordEncoder passwordEncoder) {
         this.repository = repository;
-//        addTestAttemptToBD(); //todo: remove test
+        this.passwordEncoder = passwordEncoder;
+        addUserTest(); //todo: remove test
+
     }
 
     public List<Owner> allOwners() {
@@ -36,7 +41,11 @@ public class OwnerService implements UserDetailsService {
     }
 
     public Owner getOwner(String ownerLogin) {
-        return repository.findById(ownerLogin).orElseThrow(() -> new OwnerNotFoundException(ownerLogin));
+        try {
+            return repository.findById(ownerLogin).orElseThrow(() -> new OwnerNotFoundException(ownerLogin));
+        }catch (EntityNotFoundException e){
+            throw new OwnerNotFoundException(ownerLogin);
+        }
     }
 
     public Owner replaceOwner(Owner newOwner, String ownerLogin) {
@@ -70,13 +79,22 @@ public class OwnerService implements UserDetailsService {
         return new Owner(ownerDTO.getLogin(), ownerDTO.getPassword());
     }
 
-    private void addTestAttemptToBD() { //todo: remove test
-        Coordinates testCoordinates = new Coordinates(7, 7, 7);
-        Attempt testAttempt = new Attempt(testCoordinates, true);
-        Owner testOwner = new Owner("liv", "marsen");
-        testOwner.getAttemptList().add(testAttempt);
-        testAttempt.setOwner(testOwner);
-        testCoordinates.setAttempt(testAttempt);
-        repository.save(testOwner);
+    private void addUserTest() { //todo: remove test
+//        Coordinates testCoordinates = new Coordinates(7, 7, 7);
+//        Attempt testAttempt = new Attempt(testCoordinates, true);
+//        Owner testOwner = new Owner("liv", "marsen");
+//        testOwner.getAttemptList().add(testAttempt);
+//        testAttempt.setOwner(testOwner);
+//        testCoordinates.setAttempt(testAttempt);
+//        repository.save(testOwner);
+        Owner owner = new Owner("Masha", passwordEncoder.encode("Senina"));
+        addOwner(owner);
+        try {
+            log.info("Trying to find user with id:\"" + owner.getLogin() +"\".");
+            Owner bdOwner = getOwner(owner.getLogin());
+            log.info(bdOwner.toString());
+        }catch (OwnerNotFoundException e){
+            log.warning(e.getLocalizedMessage());
+        }
     }
 }

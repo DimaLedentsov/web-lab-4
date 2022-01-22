@@ -1,12 +1,14 @@
 package weblab4.rest;
 
+import lombok.extern.java.Log;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import weblab4.entitiesDTO.OwnerDTO;
+import weblab4.sequrity.SecurityConstants;
 import weblab4.services.AuthorizationService;
 
+@Log
 @RestController
-@RequestMapping("/auth")
 public class AuthController {
 
     private final AuthorizationService authorizationService;
@@ -15,13 +17,9 @@ public class AuthController {
         this.authorizationService = authorizationService;
     }
 
-//    @PostMapping(path = "/login", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-//    public String login(@RequestBody OwnerDTO owner) {
-//        return authorizationService.login(owner);
-//    }
-
-    @PostMapping(value = "/register", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = SecurityConstants.SIGN_UP_URL, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public String registration(@RequestBody OwnerDTO owner) {
+        log.info("Starting registration!");
         return authorizationService.register(owner);
     }
 

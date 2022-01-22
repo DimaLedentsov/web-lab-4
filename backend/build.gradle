@@ -36,7 +36,7 @@ dependencies {
     annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
 
 
-//    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
     implementation 'com.oracle.ojdbc:orai18n:19.3.0.0'
     implementation 'com.oracle.ojdbc:ojdbc8:19.3.0.0'
 }
