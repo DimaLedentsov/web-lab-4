@@ -26,8 +26,7 @@ public class Coordinates{
     private Long id;
 
     @JsonIgnore
-    @OneToOne(cascade = CascadeType.ALL)
-    @MapsId
+    @OneToOne(mappedBy = "coordinates", cascade = CascadeType.ALL)
     @JoinColumn(name = "coordinates_id")
     private Attempt attempt;
 

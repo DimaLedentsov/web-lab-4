@@ -29,7 +29,6 @@ public class OwnerService implements UserDetailsService {
         this.repository = repository;
         this.passwordEncoder = passwordEncoder;
         addUserTest(); //todo: remove test
-
     }
 
     public List<Owner> allOwners() {
@@ -38,6 +37,10 @@ public class OwnerService implements UserDetailsService {
 
     public Owner addOwner(Owner newOwner) {
         return repository.save(newOwner);
+    }
+
+    public void updateOwner(Owner newOwner) {
+        repository.save(newOwner);
     }
 
     public Owner getOwner(String ownerLogin) {

@@ -18,10 +18,10 @@ import java.util.Objects;
 @Setter
 public class Attempt {
 
-    @OneToOne(mappedBy = "attempt", cascade = CascadeType.ALL)
+    @MapsId
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "coordinates", nullable = false)
-    private Coordinates coordinates = new Coordinates(0.0, 0.0, 1.0); //fixme set r = 0.0
-
+    private Coordinates coordinates = new Coordinates(0.0, 0.0, 01.0);
     private boolean doFitArea = true;
 
     @Id

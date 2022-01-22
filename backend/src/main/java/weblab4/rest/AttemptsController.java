@@ -8,6 +8,7 @@ import weblab4.services.AttemptsService;
 
 import java.util.List;
 
+
 @RestController
 public class AttemptsController {
 
@@ -21,20 +22,16 @@ public class AttemptsController {
 
     @GetMapping("/attempts")
     List<AttemptDTO> getAllAttempts() {
-        return service.getAllAttempts(getCurrentOwnerLogin());
+        return service.getAllAttempts();
     }
 
     @PostMapping("/attempts")
-     void addAttempt(@RequestBody CoordinatesDTO newAttempt) {
-        service.addAttempt(getCurrentOwnerLogin(), newAttempt);
+    AttemptDTO addAttempt(@RequestBody CoordinatesDTO newAttempt) {
+        return service.addAttempt(newAttempt);
     }
 
     @DeleteMapping("/attempts")
     void deleteAllAttempt() {
-        service.deleteAllAttempts(getCurrentOwnerLogin());
-    }
-
-    private String getCurrentOwnerLogin(){
-        return "marsen"; //todo
+        service.deleteAllAttempts();
     }
 }
