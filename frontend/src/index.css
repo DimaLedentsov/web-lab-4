@@ -90,6 +90,17 @@ input{
   color: tomato;
 }
 
-.main-page-block {
+/* .main-page-block {
+ background-color: brown;
+} */
+
+.form-table-box {
   display: flex;
+}
+
+.plot {
+  padding: 5;
+  margin : 20px;
+  border-radius: 5px;
+  border: 1px solid steelblue;
 }

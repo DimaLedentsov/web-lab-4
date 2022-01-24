@@ -1,4 +1,4 @@
-import SVG from 'https://cdn.jsdelivr.net/npm/@svgdotjs/svg.js@3.0/dist/svg.min.js'
+import * as svgjs from "@svgdotjs/svg.js";
 
 let WIDTH = 1000;
 let HEIGHT = 1000;
@@ -16,24 +16,22 @@ let clearedAt = 0;
 let lastElementNum = 0;
 const DEFAULT_R = 2;
 let currentR = DEFAULT_R;
-let globalAttemptsArray = [];
 
-export const initCanvas = () => {
-    CANVAS = SVG()
+const initCanvas = () => {
+    CANVAS = svgjs.SVG()
         .addTo('#plot')
         .size('100%', '100%')
         .viewbox(0, 0, WIDTH, HEIGHT);
-    drawPlot(globalAttemptsArray);
 }
 
-let drawPlot = (attemptsArray) => {
+export const drawPlot = (attemptsArray) => {
     console.log("Resieved array of points: \"" + attemptsArray + "\"");
     if (CANVAS === null) {
-        console.log("CANVAS wasn't init yet!")
+        console.log("CANVAS wasn't init yet!");
+        initCanvas();
     } else if (attemptsArray.length === 0) {
         initPlot();
     } else {
-        globalAttemptsArray = attemptsArray;
         drawPlotWithPoints(attemptsArray);
     }
 }
@@ -54,9 +52,9 @@ let drawPlotWithPoints = (attemptsArray) => {
     let pointsArray = [];
     attemptsArray.forEach(point => {
         pointsArray.push({
-            x: (point.coordinates).x,
-            y: (point.coordinates).y,
-            r: (point.coordinates).r,
+            x: point.x,
+            y: point.y,
+            r: point.r,
             result: point.doFitArea,
         });
     });
@@ -257,7 +255,7 @@ let getCoords = (event, element) => {
     console.log('xPosition: ' + xPosition + ' X: ' + (event.clientX - xPosition) * (WIDTH / width));
     console.log('yPosition: ' + yPosition + ' Y: ' + (event.clientY - yPosition) * (HEIGHT / height));
     // let plot = document.getElementById("plot");
-    coordinates.x = roundToHalf(convertToCoordinatesX((event.clientX - xPosition) * (WIDTH / width)));
+    coordinates.x = convertToCoordinatesX((event.clientX - xPosition) * (WIDTH / width));
     coordinates.y = convertToCoordinatesY((event.clientY - yPosition) * (HEIGHT / height));
     coordinates.r = currentR;
     console.log('X: ' + coordinates.x);
@@ -266,22 +264,22 @@ let getCoords = (event, element) => {
     return coordinates;
 }
 
-let roundToHalf = (number) => {
-    let rounded = Math.round(number);
-    if (rounded < number) {
-        if (number < rounded + 0.25) {
-            return rounded;
-        } else {
-            return rounded + 0.5;
-        }
-    } else {
-        if (number + 0.25 < rounded) {
-            return rounded + 0.5;
-        } else {
-            return rounded;
-        }
-    }
-}
+// let roundToHalf = (number) => {
+//     let rounded = Math.round(number);
+//     if (rounded < number) {
+//         if (number < rounded + 0.25) {
+//             return rounded;
+//         } else {
+//             return rounded + 0.5;
+//         }
+//     } else {
+//         if (number + 0.25 < rounded) {
+//             return rounded + 0.5;
+//         } else {
+//             return rounded;
+//         }
+//     }
+// }
 
 export const drawPlotAfterClick = (e) => {
     console.log('Start drawing point after click! Received coords: ' + e.clientX + ', ' + e.clientY);
