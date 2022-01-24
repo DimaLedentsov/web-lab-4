@@ -30,8 +30,6 @@ const LoginContainer = ({serverPort}) => {
     console.log("Fail to request token, maybe login or password are incorrect!");
     //todo: login or password is incorrect
   });
-  
-  // window.open("/main");
 
   setLogin('');
   setPassword('');
@@ -46,7 +44,7 @@ const LoginContainer = ({serverPort}) => {
           onChange={(e) => setLogin(e.target.value)}/>
     </div>
 
-    <div className='passwod field'>
+    <div type="password" className='passwod field'>
         <label>Password</label>
         <input type="text" placeholder="Password" value={password}
           onChange={(e) => setPassword(e.target.value)}/>

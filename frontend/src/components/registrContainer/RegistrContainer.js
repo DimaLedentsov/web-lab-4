@@ -1,12 +1,13 @@
 import React, {useRef} from 'react';
 import Title from '../Title';
 import { useForm } from "react-hook-form";
-import { useSelector, useDispatch } from 'react-redux';
-import { selectToken } from '../../slices/tokenSlice';
+import {useDispatch} from 'react-redux';
+import { setToken } from '../../slices/tokenSlice.js';
+import { useNavigate } from 'react-router-dom';
 
 const RegistrContainer = ({serverPort}) => {
-    const token =  useSelector(selectToken);
-    const dispatch = useDispatch();
+    const dispatch = useDispatch()
+    const navigate = useNavigate();
 
     const {
         register,
@@ -18,19 +19,26 @@ const RegistrContainer = ({serverPort}) => {
     const password = useRef({});
     password.current = watch("password", "");
   
-    
-  
     const onSubmit = (data) => {
-      console.log(token);
   
       console.log("Attempt entered by user:");
       console.log(data);
   
-      tryToSendAddAttemptRequest(serverPort, token, data).then(
+      tryToSendAddAttemptRequest(serverPort, {login:data.login, password:data.password}).then(
       (registrationResult) => {
           console.log("Got this attempt from server:" + registrationResult);
-          
+          if(registrationResult === "User added successfully"){
+            sendLoginRequest(serverPort, data.login, data.password).then((token) => {
+                console.log("Resived token for autorization: " + token);
+                dispatch(setToken(token)); //todo: check if token is valid
+                navigate('/main', {replace: true});
+              }
+              ).catch(() => {
+                console.log("Fail to request token, maybe login or password are incorrect!");
+                //todo: login or password is incorrect
+              });
           }
+        }
         ).catch(() => {
         //todo: maybe token is expired - need to go to login page
         console.log("Adding attempt finished with error!");
@@ -48,7 +56,7 @@ const RegistrContainer = ({serverPort}) => {
           {errors?.login?.type === "required" && <p className='error'>This field is required</p>}
     
           <label>Password</label>
-          <input placeholder='Password: more than 8 chars'
+          <input type="password" placeholder='Password: more than 8 chars'
           {...register("password", { required: true, pattern: /^[A-Za-z0-9]+$/i, minLength: 8,})} />
           {errors?.password?.type === "pattern" && (<p className='error'>Latin leters and numbers</p>)}
           {errors?.password?.type === "minLength" && <p className='error'>At least 8 chars</p>}
@@ -56,7 +64,7 @@ const RegistrContainer = ({serverPort}) => {
     
     
           <label>Repeat password</label>
-          <input placeholder='Repeat password'
+          <input type="password" placeholder='Repeat password'
           {...register("repeatePassword", {
                required: true,
                pattern: /^[A-Za-z0-9]+$/i,
@@ -74,18 +82,31 @@ const RegistrContainer = ({serverPort}) => {
 
 export default RegistrContainer;
 
-let tryToSendAddAttemptRequest = async (port, token, data) => {
+let tryToSendAddAttemptRequest = async (port, data) => {
     console.log(port);
-    let url = "http://localhost:"+ port +"/attempts";
+    let url = "http://localhost:"+ port +"/auth/register";
     console.log("Sending POST request to url: " + url + ". With body: " + JSON.stringify(data));
     const response = await fetch(url, {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json',
-        'Authorization': "Bearer " + token
+        'Content-Type': 'application/json'
       },
       mode: 'cors',
       body: JSON.stringify(data),
     });
-    return await response.json();
+    return response.text(); //todo: think if it will be better to return json as response or use just request status?
 }
+
+let sendLoginRequest = async (port, login, password) => {
+    let url = "http://localhost:"+ port +"/auth/login?" + new URLSearchParams({"login":login, "password":password});
+    console.log("Sending GET request to url: " + url);
+    const response = await fetch(url, {
+      method: 'GET',
+      mode: 'cors',
+    });
+  
+    let json = await response.json();
+    console.log(json);
+    return json.token;
+  }
+  

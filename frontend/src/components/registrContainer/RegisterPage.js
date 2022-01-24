@@ -2,9 +2,9 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import RegistrContainer from './RegistrContainer';
 
-const RegisterPage = () => {
+const RegisterPage = ({serverPort}) => {
   return <>
-  <RegistrContainer/>
+  <RegistrContainer serverPort={serverPort}/>
   <Link className='swich_link' to="/">Already registered?</Link>
   </>;
 };
