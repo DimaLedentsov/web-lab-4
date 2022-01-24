@@ -47,17 +47,21 @@ public class AttemptsService {
     }
 
     public AttemptDTO addAttempt(CoordinatesDTO coords) throws EmptyCoordinateException, CoordinatesOutOfBoundsException, OwnerNotFoundException{
-        coordinatesValidator.validate(coords); //if validation fails throws exceptions
+        try {
+            coordinatesValidator.validate(coords); //if validation fails throws exceptions
 
-        //update owner by extra attempt
-        Attempt newAttempt = new Attempt(new Coordinates(coords.getX(), coords.getY(), coords.getR()), areaChecker.check(coords));
-        Owner newAttemptOwner = service.getOwner(getCurrentOwnerLogin()); //un(log in) users can't addAttempts
-        newAttempt.setOwner(newAttemptOwner);
-        newAttempt.getCoordinates().setAttempt(newAttempt);
-        newAttemptOwner.getAttemptList().add(newAttempt);
-        service.updateOwner(newAttemptOwner);
 
-        return new AttemptDTO(coords.getX(), coords.getY(), coords.getR(), newAttempt.getDoFitArea());
+            //update owner by extra attempt
+            Attempt newAttempt = new Attempt(new Coordinates(coords.getX(), coords.getY(), coords.getR()), areaChecker.check(coords));
+            Owner newAttemptOwner = service.getOwner(getCurrentOwnerLogin()); //un(log in) users can't addAttempts
+            newAttempt.setOwner(newAttemptOwner);
+            newAttempt.getCoordinates().setAttempt(newAttempt);
+            newAttemptOwner.getAttemptList().add(newAttempt);
+            service.updateOwner(newAttemptOwner);
+            return new AttemptDTO(coords.getX(), coords.getY(), coords.getR(), newAttempt.getDoFitArea());
+        }catch (CoordinatesOutOfBoundsException e){
+            return null;
+        }
     }
 
     //todo: do i need this methods:

@@ -2,17 +2,13 @@ package weblab4.sequrity;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.java.Log;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import weblab4.entitiesDTO.OwnerDTO;
 
 import javax.servlet.FilterChain;
 import javax.servlet.http.HttpServletRequest;
@@ -43,26 +39,19 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 //        } catch (IOException e) {
 //            e.printStackTrace();
 //        }
-        try {
-            OwnerDTO owner = new ObjectMapper()
-                    .readValue(req.getInputStream(), OwnerDTO.class);
+        String login = req.getParameter("login");
+        String password = req.getParameter("password");
 
-            return authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(
-                            owner.getLogin(),
-                            owner.getPassword()
-//                            Here the parameter of roles collection can be added:
+        return authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                        login,
+                        password
+                        // Here the parameter of roles collection can be added:
 //                            Collection<? extends GrantedAuthority>
 //                            List<GrantedAuthority> authorities = new ArrayList<>();
 //                            authorities.add(new SimpleGrantedAuthority("User"));
-                    )
-            );
-        } catch (JsonParseException e) {
-            log.warning("Can't parse ownerDTO from the request! \n");
-            throw new RuntimeException(e);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+                )
+        );
     }
 
     //this method is called if attemptAuthentication finished with success
@@ -77,7 +66,10 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
                 .withExpiresAt(new Date(System.currentTimeMillis() + SecurityConstants.EXPIRATION_TIME))
                 .sign(Algorithm.HMAC512(SecurityConstants.SECRET.getBytes()));
 
-        String body = ((User) auth.getPrincipal()).getUsername() + " " + token;
+        String body = "{\"token\":\"" + token + "\"}";
+        log.info("Return to user\"" + ((User) auth.getPrincipal()).getUsername() + "\":" + body);
+
+        res.setStatus(HttpServletResponse.SC_OK);
         res.getWriter().write(body);
         res.getWriter().flush();
     }

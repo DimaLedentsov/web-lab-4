@@ -35,6 +35,8 @@ const Plot = ({serverPort}) => {
         console.log("Adding attempt finished with error!");
         }
       );
+    }else{
+      console.log("coordinates out of bounds or user's token is expired!");
     }
   }
 
