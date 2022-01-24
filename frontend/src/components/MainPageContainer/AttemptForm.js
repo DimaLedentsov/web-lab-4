@@ -2,8 +2,8 @@ import React from 'react';
 import Title from '../Title';
 import { useForm } from "react-hook-form";
 import { useSelector, useDispatch } from 'react-redux';
-import { addAttempt} from '../../slices/AttemptSlice';
-import {selectToken} from '../../slices/tokenSlice';
+import { addAttempt } from '../../slices/AttemptSlice';
+import { selectToken } from '../../slices/tokenSlice';
 
 const AttemptForm = ({serverPort}) => {
   const token =  useSelector(selectToken);
