@@ -21,21 +21,19 @@ const AttemptForm = ({serverPort}) => {
 
     console.log("Attempt entered by user:");
     console.log(data);
-    let newAttempt = null;
-    try{
-      newAttempt = tryToSendAddAttemptRequest(serverPort, token, data);
-      console.log("Got this attempt from server:");
-      console.log(newAttempt);
-    }catch (e) {
+
+    tryToSendAddAttemptRequest(serverPort, token, data).then(
+    (newAttempt) => {
+        console.log("Got this attempt from server:");
+        console.log(newAttempt);
+        dispatch(addAttempt(newAttempt));
+        //todo: draw plot and add it to table. (Maybe they both could just subscribe to the state data)
+        }
+      ).catch(() => {
       //todo: maybe token is expired - need to go to login page
       console.log("Adding attempt finished with error!");
-   }
-
-   if(newAttempt !== null){
-      dispatch(addAttempt(newAttempt));
-   }
-
-   //todo: draw plot and add it to table. (Maybe they both could just subscribe to the state data)
+      }
+    );
   };
 
   // console.log(watch("example")); you can watch individual input by pass the name of the input
@@ -77,12 +75,12 @@ export default AttemptForm;
 let tryToSendAddAttemptRequest = async (port, token, data) => {
   console.log(port);
   let url = "http://localhost:"+ port +"/attempts";
-  console.log("Sending POST request to url: " + url + ". With body: ");
+  console.log("Sending POST request to url: " + url + ". With body: " + JSON.stringify(data));
   const response = await fetch(url, {
     method: 'POST',
     headers: {
-      'Content-Type': 'application/json'
-      
+      'Content-Type': 'application/json',
+      'Authorization': "Bearer " + token
     },
     mode: 'cors',
     body: JSON.stringify(data),

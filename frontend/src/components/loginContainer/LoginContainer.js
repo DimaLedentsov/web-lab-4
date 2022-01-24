@@ -21,15 +21,20 @@ const LoginContainer = ({serverPort}) => {
     //todo: fix alert
   }
 
-  let token = sendLoginRequest(serverPort, login, password).token;
-  console.log("Resived token for autorization");
-  dispatch(setToken(token)); //todo: check if token is valid
+  sendLoginRequest(serverPort, login, password).then((token) => {
+    console.log("Resived token for autorization: " + token);
+    dispatch(setToken(token)); //todo: check if token is valid
+    navigate('/main', {replace: true});
+  }
+  ).catch(() => {
+    console.log("Fail to request token, maybe login or password are incorrect!");
+    //todo: login or password is incorrect
+  });
   
-  navigate('/main', {replace: true});
   // window.open("/main");
 
-  // setLogin(''); //todo: uncomment
-  // setPassword('');
+  setLogin('');
+  setPassword('');
   }
 
   return <form className="login_form container" onSubmit={loginAction} >
@@ -64,5 +69,8 @@ let sendLoginRequest = async (port, login, password) => {
     method: 'GET',
     mode: 'cors',
   });
-  return await response.json();
+
+  let json = await response.json();
+  console.log(json);
+  return json.token;
 }
