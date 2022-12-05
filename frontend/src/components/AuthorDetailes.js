@@ -2,9 +2,9 @@ import React from 'react';
 
 const AuthorDetailes = () => {
   return <div className='detailes'>
-    <label className='author name'>Senina Mariya Michailovna</label><br/>
-    <label className='author group'>P3212</label><br/>
-    <label className='author variant'>Variant: 6</label><br/> 
+    <label className='author name'>Ledentsov Dmitriy Andreevich</label><br/>
+    <label className='author group'>P32081</label><br/>
+    <label className='author variant'>Variant: 48920</label><br/>
   </div>;
 };
 

@@ -1,4 +1,7 @@
 import * as svgjs from "@svgdotjs/svg.js";
+import {useEffect, useState} from "react";
+import {useSelector} from "react-redux";
+import {selectAttempts} from "../../../slices/AttemptSlice";
 
 let WIDTH = 1000;
 let HEIGHT = 1000;
@@ -18,6 +21,7 @@ const DEFAULT_R = 2;
 let currentR = DEFAULT_R;
 
 const initCanvas = () => {
+    document.querySelector("#plot").innerHTML="";
     CANVAS = svgjs.SVG()
         .addTo('#plot')
         .size('100%', '100%')
@@ -26,10 +30,10 @@ const initCanvas = () => {
 
 export const drawPlot = (attemptsArray) => {
     console.log("Resieved array of points: \"" + attemptsArray + "\"");
-    if (CANVAS === null) {
-        console.log("CANVAS wasn't init yet!");
-        initCanvas();
-    } else if (attemptsArray.length === 0) {
+    initCanvas();
+
+
+     if (attemptsArray.length === 0) {
         initPlot();
     } else {
         drawPlotWithPoints(attemptsArray);
@@ -47,7 +51,44 @@ let initPlot = () => {
     drawRValue(DEFAULT_R);
 }
 
-let drawPlotWithPoints = (attemptsArray) => {
+
+export  function  setR(r){
+    currentR=r;
+}
+export const updatePlot = (attemptsArray) => {
+
+    setR( document.querySelector('#Rval').value);
+
+
+    //console.log('Ready to draw plot!');
+    let pointsArray = [];
+    attemptsArray.forEach(point => {
+        pointsArray.push({
+            x: point.x,
+            y: point.y,
+            r: point.r,
+            result: point.doFitArea,
+        });
+    });
+    if(pointsArray.length===0) return;
+    scale = countScale(pointsArray);
+
+    let r = currentR;
+    //console.log('R = ' + r);
+    drawArea(r);
+
+    drawAxes();
+    drawAxesScaleLabels(r);
+    drawGrid();
+
+    for (let i = 0; i < pointsArray.length; i++) {
+        let point = pointsArray[i];
+        drawPoint(point.x, point.y, point.result, pointsScale);
+    }
+
+    drawRValue(r);
+}
+export const drawPlotWithPoints = (attemptsArray) => {
     console.log('Ready to draw plot!');
     let pointsArray = [];
     attemptsArray.forEach(point => {
@@ -61,7 +102,7 @@ let drawPlotWithPoints = (attemptsArray) => {
     lastElementNum = pointsArray.length - 1;
     scale = countScale(pointsArray);
     let lastPoint = pointsArray[pointsArray.length - 1];
-    const r = lastPoint.r;
+    const r = document.querySelector('#Rval').value;
     currentR = r;
     console.log('R = ' + r);
     drawArea(r);
@@ -109,19 +150,20 @@ let convertToCoordinatesY = (yPoint) => {
 }
 
 let countScale = (pointsArray) => {
-    const scaleNum = 200; //todo: find better value
-    console.log(JSON.stringify(pointsArray));
-    let max = Math.abs(pointsArray[0].x);
-    let newScale;
-    pointsArray.forEach(point => {
+    const scaleNum = 150; //todo: find better value
+    //console.log(JSON.stringify(pointsArray));
+    //let max = Math.abs(pointsArray[0].x);
+    let newScale = currentR/scaleNum;
+    /*pointsArray.forEach(point => {
         newScale = max =
             (Math.abs(point.x) > max || (Math.abs(point.y) > max)) ?
                 Math.max(Math.abs(point.x), (Math.abs(point.y))) / scaleNum :
                 scale;
-    });
-    console.log('scale = ' + newScale)
+    });*/
+
+    //console.log('scale = ' + newScale)
     // return newScale;
-    return 0.017;
+    return newScale;
 }
 
 let drawAxes = () => {
@@ -233,7 +275,7 @@ let drawArea = (r) => {
         (convertX(r)) + ',' + (convertY(r)) + ' ' +
         (convertX(r)) + ',' + (convertY(0)) + ' ' +
         (convertX(0)) + ',' + (convertY(-r / 2));
-    console.log('area coordinates ' + area)
+    //console.log('area coordinates ' + area)
     CANVAS.polygon(area).fill(AREA_COLOR)
 }
 

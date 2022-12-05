@@ -20,6 +20,6 @@ public class AreaChecker {
         double x = coordinates.getX();
         double y = coordinates.getY();
         double r = coordinates.getR();
-        return listOfConditions.stream().allMatch(condition -> condition.validate(x, y, r));
+        return listOfConditions.stream().anyMatch(condition -> condition.validate(x, y, r));
     }
 }

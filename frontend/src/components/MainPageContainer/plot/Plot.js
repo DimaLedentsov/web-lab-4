@@ -1,19 +1,30 @@
-import React, {useEffect} from 'react';
-import { drawPlot, drawPlotAfterClick } from './plotScripts';
+import React, {useEffect, useState} from 'react';
+import {drawPlot, drawPlotAfterClick, drawPlotWithPoints, updatePlot} from './plotScripts';
 import { useSelector, useDispatch } from 'react-redux';
 import { addAttempt, selectAttempts } from '../../../slices/AttemptSlice';
 import { selectToken } from '../../../slices/tokenSlice';
 
 
 const Plot = ({serverPort}) => {
-  const attempts =  useSelector(selectAttempts);
+  var attempts =  useSelector(selectAttempts);
   const token =  useSelector(selectToken);
   const dispatch = useDispatch();
+
 
   useEffect(() => {
     drawPlot(attempts);
   });
 
+
+
+  let upd= ()=>{updatePlot(attempts)};
+  /*useEffect(() => {
+    const interval = setInterval(() => {
+      updatePlot(attempts);
+    }, 1000);
+    return () => clearInterval(interval);
+  }, []);*/
+  //let upd = (e)=>updatePlot(attempts);
   let addPoint = (e) => {
     let coordinates = drawPlotAfterClick(e);
     if(coordinates !== null){
@@ -27,7 +38,7 @@ const Plot = ({serverPort}) => {
           console.log("Got this attempt from server:");
           console.log(newAttempt);
           dispatch(addAttempt(newAttempt));
-          drawPlot(attempts);
+          drawPlotAfterClick(attempts);
           //todo: draw plot and add it to table. (Maybe they both could just subscribe to the state data)
           }
         ).catch(() => {
@@ -40,7 +51,7 @@ const Plot = ({serverPort}) => {
     }
   }
 
-  return <div id='plot' className='plot box' onClick={addPoint}/>;
+  return <div id='plot' className='plot box'  onMouseEnter={upd} onClick={addPoint}/>;
 };
 
 export default Plot;

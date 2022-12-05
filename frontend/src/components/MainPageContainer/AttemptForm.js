@@ -1,9 +1,12 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import Title from '../Title';
 import { useForm } from "react-hook-form";
 import { useSelector, useDispatch } from 'react-redux';
-import { addAttempt } from '../../slices/AttemptSlice';
+import {addAttempt, selectAttempts} from '../../slices/AttemptSlice';
 import { selectToken } from '../../slices/tokenSlice';
+import Select from "react-select";
+import {setR, UpdatePlot} from "./plot/plotScripts";
+import Plot from "./plot/Plot";
 
 const AttemptForm = ({serverPort}) => {
   const token =  useSelector(selectToken);
@@ -36,32 +39,62 @@ const AttemptForm = ({serverPort}) => {
     );
   };
 
+    const options = [
+        { value: '-2', label: '-2' },
+        { value: '-1', label: '-1' },
+        { value: '3', label: '3' }
+    ]
+
+
   // console.log(watch("example")); you can watch individual input by pass the name of the input
 
   return (
     <form className="attempt_form container" onSubmit={handleSubmit(onSubmit)}>
       <Title text='Enter Coordinates'/>
       {/* <label>X</label> */}
+        <p >X:</p>
       <input placeholder='X: from -4 to 4'
           {...register("x", {required: true, pattern: /^-?[0-9]+$/i, min: -4, max: 4 })} />
       {errors.x && (
         <p className='error'>X has to be in -4 ... 4</p>
       )}
 
-      {/* <label>Y</label> */}
-      <input placeholder='Y: from -5 to 5'
-      {...register("y", { required: true, pattern: /^-?[0-9]+$/i, min: -5, max: 5 })} />
+        <p >Y:</p>
+        <select  placeholder='y: from -5 to 5'  {...register("y", {required: true})}>
+            <option value="-5">-5</option>
+            <option value="-4">-4</option>
+            <option value="-3">-3</option>
+            <option value="-2">-2</option>
+            <option value="-1">-1</option>
+            <option value="0">0</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+        </select>
+
       {errors.y && (
         <p className='error'> Y has to be in -5 ... 5</p>
       )}
 
+        <p >R:</p>
+        <select  id= "Rval" placeholder='R: from 1 to 5' {...register("r", {required: true, onChange:(e)=>{
+                console.log("changed r")
+                //UpdatePlot();
+              } },)}>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+        </select>
 
-      {/* <label>R</label> */}
-      <input placeholder='R: from 1 to 5'
-      {...register("r", { required: true, pattern: /^[0-9]+$/i, min: 1, max: 5 })} />
-      {errors.r && (
-        <p className='error'>R has to be in 1 ... 5</p>
-      )}
+        {errors.r && (
+            <p className='error'>R has to be in 1 ... 5</p>
+        )}
+
+
 
       <input type="submit" value="Submit" className='btn-block btn' />
     </form>
