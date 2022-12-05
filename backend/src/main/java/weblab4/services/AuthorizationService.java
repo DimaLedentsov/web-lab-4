@@ -21,6 +21,7 @@ public class AuthorizationService {
         try {
             ownerDTO.setPassword(passwordEncoder.encode(ownerDTO.getPassword()));
             Owner newOwner = ownerService.getOwnerFromDTO(ownerDTO);
+
             ownerService.addOwner(newOwner);
             return "User added successfully";
         }catch (Exception e){

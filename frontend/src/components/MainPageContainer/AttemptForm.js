@@ -35,6 +35,8 @@ const AttemptForm = ({serverPort}) => {
       ).catch(() => {
       //todo: maybe token is expired - need to go to login page
       console.log("Adding attempt finished with error!");
+        alert("Adding attempt finished with error! logout please...");
+
       }
     );
   };

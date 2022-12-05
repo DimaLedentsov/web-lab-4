@@ -3,7 +3,7 @@ import { useForm } from "react-hook-form";
 import Title from '../Title';
 import {useDispatch} from 'react-redux';
 import { setToken } from '../../slices/tokenSlice.js';
-import { useNavigate } from 'react-router-dom';
+import {Link, useNavigate} from 'react-router-dom';
 
 
 const LoginContainer = ({serverPort}) => {
@@ -26,6 +26,7 @@ const LoginContainer = ({serverPort}) => {
     navigate('/main', {replace: true});
   }).catch(() => {
     console.log("Fail to request token, maybe login or password are incorrect!");
+    alert("Fail to request token, maybe login or password are incorrect!");
     //todo: login or password is incorrect
   });
 
@@ -48,6 +49,9 @@ const LoginContainer = ({serverPort}) => {
     {errors?.password?.type === "required" && <p className='error'>This field is required</p>}
     
     <input type="submit" value='Submit' className='btn btn-block'/>
+    <p>
+      <Link className='swich_link' to="/register">Didn't register yet?</Link>
+    </p>
   </form>;
 };
 

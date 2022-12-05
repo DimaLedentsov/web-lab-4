@@ -5,7 +5,7 @@ import Header from './components/Header';
 import MainPage from './components/MainPageContainer/MainPage';
 
 function App() {
-    const serverPort = 8080;
+    const serverPort = 2287;
     return(
         <Router>
             <Header title="Coordinate checker"/>

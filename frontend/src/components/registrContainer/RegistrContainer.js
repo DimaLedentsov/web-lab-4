@@ -3,7 +3,7 @@ import Title from '../Title';
 import { useForm } from "react-hook-form";
 import {useDispatch} from 'react-redux';
 import { setToken } from '../../slices/tokenSlice.js';
-import { useNavigate } from 'react-router-dom';
+import {Link, useNavigate} from 'react-router-dom';
 
 const RegistrContainer = ({serverPort}) => {
     const dispatch = useDispatch()
@@ -35,13 +35,17 @@ const RegistrContainer = ({serverPort}) => {
               }
               ).catch(() => {
                 console.log("Fail to request token, maybe login or password are incorrect!");
+                alert("Fail to request token, maybe login or password are incorrect!");
                 //todo: login or password is incorrect
               });
+          } else{
+              alert(registrationResult);
           }
         }
         ).catch(() => {
         //todo: maybe token is expired - need to go to login page
         console.log("Adding attempt finished with error!");
+          alert("Adding attempt finished with error!");
         }
       );
     };
@@ -76,6 +80,8 @@ const RegistrContainer = ({serverPort}) => {
           {errors?.repeatePassword?.type === "validate" && <p className='error'>The passwords do not match</p>}
     
           <input type="submit" value="Submit" className='btn-block btn' />
+
+            <Link className='swich_link' to="/">Already registered?</Link>
         </form>
     );
 };

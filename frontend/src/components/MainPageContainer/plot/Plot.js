@@ -18,12 +18,12 @@ const Plot = ({serverPort}) => {
 
 
   let upd= ()=>{updatePlot(attempts)};
-  /*useEffect(() => {
+  useEffect(() => {
     const interval = setInterval(() => {
-      updatePlot(attempts);
-    }, 1000);
+      //updatePlot(attempts);
+    }, 4000);
     return () => clearInterval(interval);
-  }, []);*/
+  }, []);
   //let upd = (e)=>updatePlot(attempts);
   let addPoint = (e) => {
     let coordinates = drawPlotAfterClick(e);

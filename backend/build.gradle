@@ -57,7 +57,17 @@ task copyWebApp(type: Copy){
 //        attributes 'Start-Class': 'ru.senina.itmo.weblab4.BackendApplication'
 //    }
 //}
+/*
+sourceSets {
+    main {
 
+        resources {
+            srcDir 'src/main/resources'
+            include '*.properties'
+            //output.resourcesDir = 'build/resources/main'
+        }
+    }
+}*/
 
 bootJar.dependsOn(copyWebApp)
 compileJava.dependsOn ":frontend:build"

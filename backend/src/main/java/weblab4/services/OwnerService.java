@@ -10,6 +10,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import weblab4.entities.Owner;
 import weblab4.entitiesDTO.OwnerDTO;
+import weblab4.exceptions.OwnerAlreadyExistsException;
 import weblab4.exceptions.OwnerNotFoundException;
 import weblab4.repository.OwnersRepository;
 
@@ -28,7 +29,7 @@ public class OwnerService implements UserDetailsService {
     public OwnerService(OwnersRepository repository, BCryptPasswordEncoder passwordEncoder) {
         this.repository = repository;
         this.passwordEncoder = passwordEncoder;
-        addUserTest(); //todo: remove test
+        //addUserTest(); //todo: remove test
     }
 
     public List<Owner> allOwners() {
@@ -36,6 +37,7 @@ public class OwnerService implements UserDetailsService {
     }
 
     public Owner addOwner(Owner newOwner) {
+        if(checkOwner(newOwner.getLogin())) throw  new OwnerAlreadyExistsException(newOwner.getLogin());
         return repository.save(newOwner);
     }
 
@@ -82,6 +84,9 @@ public class OwnerService implements UserDetailsService {
         return new Owner(ownerDTO.getLogin(), ownerDTO.getPassword());
     }
 
+    public  boolean checkOwner(String login){
+        return repository.findById(login).isPresent();
+    }
     private void addUserTest() { //todo: remove test
 //        Coordinates testCoordinates = new Coordinates(7, 7, 7);
 //        Attempt testAttempt = new Attempt(testCoordinates, true);
